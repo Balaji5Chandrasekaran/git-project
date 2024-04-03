@@ -1,6 +1,4 @@
-123
-abc
-123
+
 $username = "sramamoorthy1"
 $appPassword = ""
 $credentials = "$($username):$($appPassword)"
