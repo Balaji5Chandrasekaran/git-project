@@ -1,4 +1,34 @@
 123
 abc
 123
+$username = "sramamoorthy1"
+$appPassword = ""
+$credentials = "$($username):$($appPassword)"
+$encodedCredentials = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($credentials))
+$authHeader = "Basic $encodedCredentials"
+$teamname = "goeasyteam"
+$Url = "https://api.bitbucket.org/2.0/repositories/"+$teamname+""
+$webData = ConvertFrom-JSON (Invoke-WebRequest -Uri $Url -Method Get -Headers @{'Authorization'= $authHeader} )
 
+$res=$webData
+$next=$webData.page
+$size=$webData.size
+$pagecount=$webData.pagelen
+$pagecount=$webData.size/$webData.pagelen
+$IsDecimal = if (($pagecount - ($pagecount -as [int])) -ne 0) {[Math]::Ceiling($pagecount)} Else {$pagecount}
+ 
+
+for($x=1; $x -lt 2; $x=$x+1)   
+{   
+    $Url = "https://api.bitbucket.org/2.0/repositories/"+$teamname+"?page=$x"
+    $pageData = ConvertFrom-JSON (Invoke-WebRequest -Uri $Url -Method Get -Headers @{'Authorization'= $authHeader } )
+    $response = $pageData.values.name
+    foreach ($name in $response) {
+        $url = "https://bitbucket.org/$teamname/$name/get/master.zip"
+        $outputPath = "D:\BitbucketBackup\$name.zip"
+        Invoke-WebRequest -Uri $url -Headers @{'Authorization' = $authHeader } -OutFile $outputPath
+
+
+        
+    }
+} 
