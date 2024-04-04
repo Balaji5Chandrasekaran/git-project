@@ -30,3 +30,49 @@ for($x=1; $x -lt 2; $x=$x+1)   
         
     }
 } 
+
+
+
+
+
+from jira import JIRA
+import requests
+
+# Function to create a Jira ticket
+def create_jira_ticket(summary, description):
+    options = {
+        'server': 'https://goeasy.atlassian.net'
+    }
+    jira = JIRA(options, basic_auth=('Sathish Ramamoorthy', 'your_api_token'))
+
+    issue_dict = {
+        'project': {'key': 'PROJECT_KEY'},
+        'summary': summary,
+        'description': description,
+        'issuetype': {'name': 'Bug'}  # Adjust the issue type as needed
+    }
+
+    new_issue = jira.create_issue(fields=issue_dict)
+    print("Jira ticket created successfully. Issue key:", new_issue.key)
+
+# Function to monitor Azure Pipeline status
+def monitor_azure_pipeline():
+    # Your code here to monitor Azure Pipeline status
+    # This could involve querying Azure DevOps API or subscribing to events
+
+    # For the sake of example, let's assume the pipeline failed
+    pipeline_failed = True
+
+    if pipeline_failed:
+        # Create a Jira ticket for the failure
+        summary = "Azure Pipeline Failure"
+        description = "The Azure Pipeline has failed. Investigate and fix the issue."
+        create_jira_ticket(summary, description)
+
+# Main function
+def main():
+    monitor_azure_pipeline()
+
+if __name__ == "__main__":
+    main()
+
