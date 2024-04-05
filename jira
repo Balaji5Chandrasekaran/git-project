@@ -1,0 +1,40 @@
+import requests
+
+def create_jira_epic(project_key, summary, description, auth_token):
+    jira_api_url = "https://kloudping.atlassian.net/rest/api/3/issue"
+    headers = {
+        "Authorization": f"Basic {auth_token}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "fields": {
+            "project": {"key": project_key},
+            "summary": summary,
+            "description": description,
+            "issuetype": {"name": "Epic"}  # Change issuetype to "Epic"
+        }
+    }
+    response = requests.post(jira_api_url, headers=headers, json=data)
+    if response.status_code == 201:
+        print("Jira epic created successfully!")
+        return response.json()
+    else:
+        print("Failed to create Jira epic. Status code:", response.status_code)
+        print("Response:", response.text)  # Print response text for debugging
+        return None
+
+def main():
+    project_key = "KP"
+    auth_token = "ATATT3xFfGF0SLDAJ5-ttGGVIvYrzdjPAOqiDuwu5XA-HFWKyTzvu0r6zH1vTypdXmbQLiUdQMjAEYD3lLqk8rmArF90D_hqQUMZnDvgXvfbcD9aod66cZ8t73RwHpy1tAjndkGGtEiUIeHr00U3UWQ3E1CL94B9XGeUwZNh-5B8yyewfAw-Zg0=04486F06"
+    epic_data = {
+        "summary": "Example Epic",
+        "description": "This is an example epic created via API."
+    }
+    created_epic = create_jira_epic(project_key, **epic_data, auth_token=auth_token)
+    if created_epic:
+        print("Jira epic created successfully!")
+    else:
+        print("Failed to create Jira epic.")
+
+if __name__ == "__main__":
+    main()
